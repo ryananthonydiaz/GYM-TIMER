@@ -35,34 +35,54 @@ const useStyles = makeStyles(theme => ({
 
 function StandardRunningClock() {
   const classes = useStyles();
+  const [timerRunning, setTimerRunning] = useState(false);
+  const [countDownRunning, setCountDownRunning] = useState(false);
   const [countDown, setCountDown] = useState(10);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
-  const tenSecondCountDown = () => setCountDown(cntDown => cntDown - 1);
-
-  const stopWatch = () => {
-    if (seconds === 59) {
-      if (minutes === 59) {
-        setHours(hrs => hrs + 1);
-        setMinutes(0);
-        setSeconds(0);
-        return;
-      }
-      setSeconds(0);
-      setMinutes(mins => mins + 1);
-    } else {
-      setSeconds(secs => secs + 1);
+  const startClock = () => {
+    // If the clock is paused/stopped at 00:00:00
+    if (hours === 0 && minutes === 0 && seconds === 0 && timerRunning === false) {
+      setCountDownRunning(true)
+      setCountDown(10);
+      setTimerRunning(true)
     }
   }
 
-  let time;
-  if (countDown === 0) {
-    time = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  } else {
-    time = <CountDown countDown={countDown} setCountDown={setCountDown} />;
+  const reset = () => {
+    setHours(0);
+    setMinutes(0);
+    setSeconds(0);
   }
+
+  const tenSecondCountDown = () => setCountDown(cntDown => cntDown - 1);
+
+  const stopWatch = () => {
+    if (timerRunning === true) {
+      if (seconds === 59) {
+        if (minutes === 59) {
+          setHours(hrs => hrs + 1);
+          setMinutes(0);
+          setSeconds(0);
+          return;
+        }
+        setSeconds(0);
+        setMinutes(mins => mins + 1);
+      } else {
+        setSeconds(secs => secs + 1);
+      }
+    }
+  }
+
+  const clock = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  const tMinus = (
+                  <CountDown
+                    countDown={countDown}
+                    setCountDown={setCountDown}
+                  />
+                );
 
   useEffect(() => {
     let stopWatchInterval = null;
@@ -72,16 +92,16 @@ function StandardRunningClock() {
     }
 
     return () => clearInterval(stopWatchInterval);
-  }, [seconds, minutes, countDown]);
+  }, [seconds, minutes, countDown, timerRunning]);
 
   return (
     <>
       <div className={classes.clock}>
-        {time}
+        {countDownRunning === true && countDown > 0 ? tMinus : clock}
         <div className={classes.buttons}>
-          <Button className={classes.button} onClick={() => console.log('1')}>Start</Button>
-          <Button className={classes.button} onClick={() => console.log('2')}>Stop</Button>
-          <Button className={classes.button} onClick={() => console.log('3')}>Reset</Button>
+          <Button className={classes.button} onClick={startClock}>Start</Button>
+          <Button className={classes.button} onClick={() => setTimerRunning(false)}>Stop</Button>
+          <Button className={classes.button} onClick={reset}>Reset</Button>
         </div>
       </div>
 
