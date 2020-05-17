@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { Context as TimerContext } from '../state/TimerContext';
 import { makeStyles } from '@material-ui/core/styles';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
@@ -31,8 +32,9 @@ const actions = [
   { icon: <TimerIcon />, name: 'Timer', timerType: 'TIMER' },
 ];
 
-export default function SpeedDialTooltipOpen() {
+export default function Menu() {
   const classes = useStyles();
+  const { setTimer } = useContext(TimerContext);
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
 
@@ -45,7 +47,7 @@ export default function SpeedDialTooltipOpen() {
   };
 
   const selectTimer = (type) => {
-    // set global state to specific timer component to be mounted
+    setTimer(type);
     handleClose()
   }
 
