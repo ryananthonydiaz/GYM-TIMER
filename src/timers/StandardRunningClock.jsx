@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import CountDown from '../shared/CountDown';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
@@ -12,6 +13,8 @@ function StandardRunningClock() {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
+
+  const time = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
   const tenSecondCountDown = () => setCountDown(cntDown => cntDown - 1);
 
@@ -40,21 +43,9 @@ function StandardRunningClock() {
     return () => clearInterval(stopWatchInterval);
   }, [seconds, minutes, countDown]);
 
-  useEffect(() => {
-    let countDownInterval = setInterval(tenSecondCountDown, 1000);
-    
-    if (countDown === 0) {
-      clearInterval(countDownInterval);
-    }
-    return () => clearInterval(countDownInterval);
-  }, [countDown])
-
-  // const classes = useStyles();
-
-  const time = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   return (
     <div>
-      <p>{countDown.toString().padStart(2, '0')}</p>
+      <CountDown countDown={countDown} setCountDown={setCountDown} />
       {time}
     </div>
   );
