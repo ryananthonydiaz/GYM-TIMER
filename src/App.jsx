@@ -13,7 +13,7 @@ function App() {
   if (timer === 'STOP_WATCH') {
     timerToDisplay = <Timer />;
   } else if (timer === 'EMOM') {
-    timerToDisplay = <EveryMinuteOnTheMinute />
+    timerToDisplay = <EveryMinuteOnTheMinute />;
   } else if (timer === 'AMRAP') {
     timerToDisplay = <AsManyRoundsAsPossible />;
   } else if (timer === 'INTERVAL') {

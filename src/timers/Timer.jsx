@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function StandardRunningClock() {
+function Timer() {
   const classes = useStyles();
   const [clockRunning, setClockRunning] = useState(false);
   const [countDownRunning, setCountDownRunning] = useState(false);
@@ -105,4 +105,4 @@ function StandardRunningClock() {
   );
 }
 
-export default StandardRunningClock;
+export default Timer;
