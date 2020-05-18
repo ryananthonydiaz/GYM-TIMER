@@ -91,7 +91,6 @@ function StandardRunningClock() {
   }, [seconds, minutes, countDown, timerRunning]);
 
   return (
-    <>
       <div className={classes.clock}>
         {countDownRunning === true && countDown > 0 ? tMinus : clock}
         <div className={classes.buttons}>
@@ -100,8 +99,6 @@ function StandardRunningClock() {
           <Button className={classes.button} onClick={reset}>Reset</Button>
         </div>
       </div>
-
-    </>
   );
 }
 
