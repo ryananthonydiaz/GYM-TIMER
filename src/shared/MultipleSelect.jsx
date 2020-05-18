@@ -4,31 +4,15 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   formControl: {
-    position: 'absolute',
-    left: '50%',
-    transform: 'translate(-50%)',
     margin: theme.spacing(1),
     minWidth: '23vw',
     [theme.breakpoints.down('sm')]: {
       width: '80vw',
     }
-  },
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    margin: 2,
-  },
-  noLabel: {
-    marginTop: theme.spacing(3),
   },
 }));
 
@@ -45,10 +29,8 @@ const MenuProps = {
 
 const minutes = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight',];
 
-
-function MultipleSelect() {
+function MultipleSelect({ min, setMin }) {
   const classes = useStyles();
-  const [min, setMin] = useState('One');
 
   const handleChange = (event) => setMin(event.target.value);
 
@@ -80,29 +62,24 @@ function MultipleSelect() {
       break;
   }
 
-  return (
-    <div>
+  const menuItems = minutes.map((minute) => (
+    <MenuItem key={minute} value={minute}>
+      {minute}
+    </MenuItem>
+  ));
 
+  return (
       <FormControl className={classes.formControl}>
         <InputLabel id="multipleSelectLabel">{selectLabel}</InputLabel>
         <Select
-          labelId="everyMinute"
-          id="mutlipleSelect"
           value={min}
           onChange={handleChange}
           input={<Input id="select-multiple-chip" />}
           MenuProps={MenuProps}
         >
-          {minutes.map((minute) => (
-            <MenuItem key={minute} value={minute}>
-              {minute}
-            </MenuItem>
-          ))}
+          {menuItems}
         </Select>
       </FormControl>
-
-
-    </div>
   );
 }
 

@@ -77,7 +77,7 @@ function StandardRunningClock() {
     }
   }
 
-  const clock = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  const clock = `${hours.toString().padStart(2, '0')} : ${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
 
   useEffect(() => {
