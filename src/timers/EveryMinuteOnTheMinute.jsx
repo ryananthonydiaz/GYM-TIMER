@@ -144,7 +144,6 @@ function EveryMinuteOnTheMinute() {
   }
 
   const clock = `${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
-
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
 
   useEffect(() => {

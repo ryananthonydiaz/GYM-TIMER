@@ -4,7 +4,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -63,22 +63,22 @@ function MultipleSelect({ min, setMin }) {
   }
 
   const menuItems = minutes.map((minute) => (
-    <MenuItem key={minute} value={minute}>
+    <option key={minute} value={minute}>
       {minute}
-    </MenuItem>
+    </option>
   ));
 
   return (
       <FormControl className={classes.formControl}>
         <InputLabel id="multipleSelectLabel">{selectLabel}</InputLabel>
-        <Select
+        <NativeSelect
           value={min}
           onChange={handleChange}
           input={<Input id="select-multiple-chip" />}
           MenuProps={MenuProps}
         >
           {menuItems}
-        </Select>
+        </NativeSelect>
       </FormControl>
   );
 }

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import CountDown from '../shared/CountDown';
-import { makeStyles } from '@material-ui/core/styles';
+import IntervalSetter from '../shared/IntervalSetter';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   clock: {
@@ -14,15 +17,10 @@ const useStyles = makeStyles(theme => ({
     fontWeight: '100',
     color: 'white',
     textAlign: 'center',
-    position: 'absolute',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
     textShadow: '0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0)',
-    [theme.breakpoints.down('sm')]: {
-      top: '30%',
-      transform: 'translate(-50%, -30%)',
-    },
+  },
+  gridItem: {
+    alignSelf: 'center',
   },
   buttons:  {
     position: 'absolute',
@@ -40,13 +38,13 @@ function Interval() {
   const [clockRunning, setClockRunning] = useState(false);
   const [countDownRunning, setCountDownRunning] = useState(false);
   const [countDown, setCountDown] = useState(10);
-  const [hours, setHours] = useState(0);
+  const [rounds, setRounds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
   const startClock = () => {
     // If the clock is paused/stopped at 00:00:00
-    if (hours === 0 && minutes === 0 && seconds === 0 && clockRunning === false) {
+    if (minutes === 0 && seconds === 0 && clockRunning === false) {
       setCountDownRunning(true)
       setCountDown(10);
       setClockRunning(true)
@@ -64,7 +62,6 @@ function Interval() {
   }
 
   const reset = () => {
-    setHours(0);
     setMinutes(0);
     setSeconds(0);
     setCountDown(false);
@@ -75,7 +72,6 @@ function Interval() {
     if (clockRunning === true) {
       if (seconds === 59) {
         if (minutes === 59) {
-          setHours(hrs => hrs + 1);
           setMinutes(0);
           setSeconds(0);
           return;
@@ -88,7 +84,18 @@ function Interval() {
     }
   }
 
-  const clock = `${hours.toString().padStart(2, '0')} : ${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
+  let roundsStyled = (
+    <Grid className={classes.rounds} item>Rounds: {rounds}</Grid>
+  );
+  
+  const matches = useMediaQuery('(max-width:600px)');
+  if (matches === true) {
+    roundsStyled = (
+      <div className={classes.rounds}>Rnds: {rounds}</div>
+    );
+  }
+
+  const clock = `${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
 
   useEffect(() => {
@@ -102,6 +109,10 @@ function Interval() {
   }, [seconds, minutes, countDown, clockRunning]);
 
   return (
+    <>
+      <Grid justify="center" container>
+          {clockRunning ? roundsStyled : <IntervalSetter />}
+      </Grid>
       <div className={classes.clock}>
         {countDownRunning === true && countDown > 0 ? tMinus : clock}
         <div className={classes.buttons}>
@@ -110,6 +121,7 @@ function Interval() {
           <Button className={classes.button} onClick={reset}>Reset</Button>
         </div>
       </div>
+    </>
   );
 }
 
