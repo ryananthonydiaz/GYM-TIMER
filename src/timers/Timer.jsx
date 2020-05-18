@@ -7,7 +7,10 @@ const useStyles = makeStyles(theme => ({
   clock: {
     // border: '1px solid white',
     width: '100vw',
-    fontSize: '5rem',
+    fontSize: '10rem',
+    [theme.breakpoints.down('md')]: {
+      fontSize: '5rem',
+    },
     fontWeight: '100',
     color: 'white',
     textAlign: 'center',
@@ -34,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 function StandardRunningClock() {
   const classes = useStyles();
-  const [timerRunning, setTimerRunning] = useState(false);
+  const [clockRunning, setClockRunning] = useState(false);
   const [countDownRunning, setCountDownRunning] = useState(false);
   const [countDown, setCountDown] = useState(10);
   const [hours, setHours] = useState(0);
@@ -43,12 +46,12 @@ function StandardRunningClock() {
 
   const startClock = () => {
     // If the clock is paused/stopped at 00:00:00
-    if (hours === 0 && minutes === 0 && seconds === 0 && timerRunning === false) {
+    if (hours === 0 && minutes === 0 && seconds === 0 && clockRunning === false) {
       setCountDownRunning(true)
       setCountDown(10);
-      setTimerRunning(true)
+      setClockRunning(true)
     } else {
-      setTimerRunning(true);
+      setClockRunning(true);
     }
   }
 
@@ -56,12 +59,12 @@ function StandardRunningClock() {
     setHours(0);
     setMinutes(0);
     setSeconds(0);
+    setCountDown(false);
+    setClockRunning(false)
   }
 
-  const tenSecondCountDown = () => setCountDown(cntDown => cntDown - 1);
-
   const stopWatch = () => {
-    if (timerRunning === true) {
+    if (clockRunning === true) {
       if (seconds === 59) {
         if (minutes === 59) {
           setHours(hrs => hrs + 1);
@@ -88,14 +91,14 @@ function StandardRunningClock() {
     }
 
     return () => clearInterval(stopWatchInterval);
-  }, [seconds, minutes, countDown, timerRunning]);
+  }, [seconds, minutes, countDown, clockRunning]);
 
   return (
       <div className={classes.clock}>
         {countDownRunning === true && countDown > 0 ? tMinus : clock}
         <div className={classes.buttons}>
           <Button className={classes.button} onClick={startClock}>Start</Button>
-          <Button className={classes.button} onClick={() => setTimerRunning(false)}>Stop</Button>
+          <Button className={classes.button} onClick={() => setClockRunning(false)}>Stop</Button>
           <Button className={classes.button} onClick={reset}>Reset</Button>
         </div>
       </div>
