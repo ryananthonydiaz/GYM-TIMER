@@ -36,7 +36,7 @@ export default function Menu() {
   const classes = useStyles();
   const { setTimer } = useContext(TimerContext);
   const [open, setOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
+
 
   const handleOpen = () => {
     setOpen(true);
@@ -56,7 +56,6 @@ export default function Menu() {
       <SpeedDial
         ariaLabel="Set timer type"
         className={classes.speedDial}
-        hidden={hidden}
         icon={<SpeedDialIcon />}
         onClose={handleClose}
         onOpen={handleOpen}

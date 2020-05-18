@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Context as TimerContext } from './state/TimerContext';
 import Timer from './timers/Timer';
 import Menu from './menu/Menu';

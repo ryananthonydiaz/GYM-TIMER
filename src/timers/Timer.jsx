@@ -15,7 +15,6 @@ const useStyles = makeStyles(theme => ({
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
-    color: '#daf6ff',
     textShadow: '0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0)',
     [theme.breakpoints.down('sm')]: {
       top: '30%',
@@ -48,6 +47,8 @@ function StandardRunningClock() {
       setCountDownRunning(true)
       setCountDown(10);
       setTimerRunning(true)
+    } else {
+      setTimerRunning(true);
     }
   }
 
@@ -77,12 +78,7 @@ function StandardRunningClock() {
   }
 
   const clock = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  const tMinus = (
-                  <CountDown
-                    countDown={countDown}
-                    setCountDown={setCountDown}
-                  />
-                );
+  const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
 
   useEffect(() => {
     let stopWatchInterval = null;
