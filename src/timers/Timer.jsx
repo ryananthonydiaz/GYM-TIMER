@@ -55,6 +55,14 @@ function Timer() {
     }
   }
 
+  const stopClock = () => {
+    if (countDownRunning === true) {
+      setCountDownRunning(false);
+    }
+
+    setClockRunning(false);
+  }
+
   const reset = () => {
     setHours(0);
     setMinutes(0);
@@ -63,7 +71,7 @@ function Timer() {
     setClockRunning(false)
   }
 
-  const stopWatch = () => {
+  const clockLogic = () => {
     if (clockRunning === true) {
       if (seconds === 59) {
         if (minutes === 59) {
@@ -84,13 +92,13 @@ function Timer() {
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
 
   useEffect(() => {
-    let stopWatchInterval = null;
+    let clockInterval = null;
 
     if (countDown === 0) {
-      stopWatchInterval = setInterval(stopWatch, 1000);
+      clockInterval = setInterval(clockLogic, 1000);
     }
 
-    return () => clearInterval(stopWatchInterval);
+    return () => clearInterval(clockInterval);
   }, [seconds, minutes, countDown, clockRunning]);
 
   return (
@@ -98,7 +106,7 @@ function Timer() {
         {countDownRunning === true && countDown > 0 ? tMinus : clock}
         <div className={classes.buttons}>
           <Button className={classes.button} onClick={startClock}>Start</Button>
-          <Button className={classes.button} onClick={() => setClockRunning(false)}>Stop</Button>
+          <Button className={classes.button} onClick={stopClock}>Stop</Button>
           <Button className={classes.button} onClick={reset}>Reset</Button>
         </div>
       </div>

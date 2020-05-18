@@ -69,7 +69,13 @@ function EveryMinuteOnTheMinute() {
     }
   };  
 
-  const stopClock = () => setClockRunning(false);
+  const stopClock = () => {
+    if (countDownRunning === true) {
+      setCountDownRunning(false);
+    }
+
+    setClockRunning(false);
+  };
 
   const resetClock = () => {
     setSeconds(0);
