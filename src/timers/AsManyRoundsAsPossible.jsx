@@ -91,7 +91,7 @@ function AsManyRoundsAsPossible() {
       if (clockRunning === true) {
         if (seconds === 0) {
           // Time is up so don't do anything
-          if (minutes === 0 && seconds === 0) {
+          if (minutes === 0) {
             setClockRunning(false);
             setAMRAP(0);
             return;
