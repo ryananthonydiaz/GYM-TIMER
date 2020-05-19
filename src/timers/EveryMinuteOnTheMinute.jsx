@@ -22,6 +22,9 @@ const useStyles = makeStyles(theme => {
       ...fontStyle,
       textAlign: 'center',
     },
+    timeLabel: {
+      fontSize: '1rem',
+    },
     button: {
       margin: theme.spacing(0, 2),
     },
@@ -115,8 +118,28 @@ function EveryMinuteOnTheMinute() {
     );
   }
 
-  const clock = `${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
+  const formattedMinutesString = `${minutes.toString().padStart(2, '0')}`;
+  const formattedSecondsString = `${seconds.toString().padStart(2, '0')}`;
+  const clock = (
+    <>
+      <Grid justify="center" alignItems="flex-end" direction="column" xs={4} item container>
+        <Grid item>{formattedMinutesString}</Grid>
+        <Grid justify="center" item container>
+          <Grid className={classes.timeLabel} item>Minutes</Grid>
+        </Grid>
+      </Grid>
+      <Grid justify="center" direction="column" xs={4} item container>
+        <Grid item>:</Grid>
+      </Grid>
+      <Grid justify="center" alignItems="flex-start" direction="column" xs={4} item container>
+        <Grid item>{formattedSecondsString}</Grid>
+        <Grid justify="center" item container>
+          <Grid className={classes.timeLabel} item>Seconds</Grid>
+        </Grid>
+      </Grid>
+    </>
+  );
 
   useEffect(() => {
     const clockLogic = () => {
@@ -146,14 +169,16 @@ function EveryMinuteOnTheMinute() {
 
   return (
     <>
-      <div className={classes.clock}>
-        {countDownRunning === true && countDown > 0 ? tMinus : clock}
-        <div>
-          <Button className={classes.button} onClick={startClock}>Start</Button>
-          <Button className={classes.button} onClick={stopClock}>Stop</Button>
-          <Button className={classes.button} onClick={resetClock}>Reset</Button>
-        </div>
-      </div>
+      <Grid justify="center" className={classes.clock} container>
+      <Grid justify="center" xs={12} item container>{countDownRunning === true && countDown > 0 ? tMinus : clock}</Grid>
+        <Grid justify="center" item container>
+          <Grid item><Button className={classes.button} onClick={startClock}>Start</Button></Grid>
+          <Grid item><Button className={classes.button} onClick={stopClock}>Stop</Button></Grid>
+          <Grid item><Button className={classes.button} onClick={resetClock}>Reset</Button></Grid>
+        </Grid>
+      </Grid>
+
+
       <Grid justify="center" container>
         <Grid item>
           {clockRunning ? roundsStyled : <MultipleSelect min={min} setMin={setEMOMAmount} />}
