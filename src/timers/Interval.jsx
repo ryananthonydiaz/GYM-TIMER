@@ -43,8 +43,10 @@ function Interval() {
   const [restMins, setRestMins] = useState(0);
   const [restSecs, setRestSecs] = useState(0);
 
-  const [clockRunning, setClockRunning] = useState(false);
+  const [workClockRunning, setWorkClockRunning] = useState(false);
+  const [restClockRunning, setRestClockRunning] = useState(false);
   const [countDownRunning, setCountDownRunning] = useState(false);
+
   const [countDown, setCountDown] = useState(10);
   const [rounds, setRounds] = useState(0);
 
@@ -76,12 +78,12 @@ function Interval() {
 
   const startClock = () => {
     // If the clock is paused/stopped at 00:00:00
-    if (workMins > 0 || workSecs > 0 && clockRunning === false) {
+    if (workMins > 0 || workSecs > 0 && workClockRunning === false) {
       setCountDownRunning(true)
       setCountDown(10);
-      setClockRunning(true)
+      setWorkClockRunning(true)
     } else {
-      setClockRunning(true);
+      setWorkClockRunning(true);
     }
   }
 
@@ -111,7 +113,8 @@ function Interval() {
     );
   }
 
-  const clock = `${workClockMins.toString().padStart(2, '0')} : ${workClockSecs.toString().padStart(2, '0')}`;
+  const workClock = `${workClockMins.toString().padStart(2, '0')} : ${workClockSecs.toString().padStart(2, '0')}`;
+  const restClock = `${restClockMins.toString().padStart(2, '0')} : ${restClockSecs.toString().padStart(2, '0')}`;
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
 
   const intervalSetterComponent = (
@@ -127,16 +130,38 @@ function Interval() {
 
   useEffect(() => {
     const clockLogic = () => {
-      if (clockRunning === true) {
+      if (workClockRunning === true) {
         if (workClockSecs === 0) {
           // Interval is complete if next if is true
           if (workClockMins === 0) {
+            // set rest clock running to true and reset the work clock to the top of the interval add 1 to rounds
+            setRestClockRunning(true);
+            setWorkClockRunning(false);
+            setWorkClockMins(workMins);
+            setWorkClockSecs(workSecs);
+
+            setRounds(rnds => rnds + 1);
             return;
           }
           setWorkClockSecs(59);
           setWorkClockMins(mins => mins - 1);
         } else {
           setWorkClockSecs(secs => secs - 1);
+        }
+      } else {
+        // rest clock logic (use logic from above)
+        if (restClockSecs === 0) {
+          if (restClockMins === 0) {
+            setWorkClockRunning(true);
+            setRestClockRunning(false);
+            setRestClockMins(restMins);
+            setRestClockSecs(restSecs);
+            return;
+          }
+          setRestClockSecs(59);
+          setRestClockMins(mins => mins - 1);
+        } else {
+          setRestClockSecs(secs => secs - 1);
         }
       }
     }
@@ -148,15 +173,16 @@ function Interval() {
     }
 
     return () => clearInterval(clockInterval);
-  }, [workClockSecs, workClockMins, countDown, clockRunning]);
+  }, [workClockSecs, workClockMins, restClockSecs, restClockMins, countDown, workClockRunning, restClockRunning]);
 
+  // console.log(`work mins: ${workClockMins}\nwork secs: ${workClockSecs}`);
   return (
     <>
       <Grid justify="center" container>
           {intervalSetterComponent}
       </Grid>
       <div className={classes.clock}>
-        {countDownRunning === true && countDown > 0 ? tMinus : clock}
+        {countDownRunning === true && countDown > 0 ? tMinus : (restClockRunning ? restClock : workClock)}
         <div className={classes.buttons}>
           <Button className={classes.button} onClick={startClock}>Start</Button>
           <Button className={classes.button} onClick={() => null}>Stop</Button>
