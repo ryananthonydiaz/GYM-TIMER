@@ -35,6 +35,10 @@ const useStyles = makeStyles(theme => ({
   timeLabel: {
     fontSize: '1rem',
   },
+  restSignal: {
+    testTransform: 'capitalize',
+    fontSize: '1rem',
+  },
 }));
 
 function Interval() {
@@ -85,7 +89,7 @@ function Interval() {
       return;
     }
     // If the clock is paused/stopped at 00:00:00
-    if ((workMins > 0 || workSecs > 0) && workClockRunning === false) {
+    if ((workClockMins === workMins && workClockSecs === workSecs) && workClockRunning === false) {
       setCountDownRunning(true)
       setCountDown(10);
       setWorkClockRunning(true)
@@ -94,20 +98,28 @@ function Interval() {
     }
   }
 
-  // const stopClock = () => {
-  //   if (countDownRunning === true) {
-  //     setCountDownRunning(false);
-  //   }
+  const stopClock = () => {
+    if (countDownRunning === true) {
+      setCountDownRunning(false);
+    }
 
-  //   setClockRunning(false);
-  // }
+    if (workClockRunning === true) {
+      setWorkClockRunning(false);
+    }
 
-  // const reset = () => {
-  //   setMinutes(0);
-  //   setSeconds(0);
-  //   setCountDown(false);
-  //   setClockRunning(false)
-  // }
+    if (restClockRunning === true) {
+      setRestClockRunning(false);
+    }
+  };
+
+  const reset = () => {
+    setWorkClockMins(workMins);
+    setWorkClockSecs(workSecs);
+    setRestClockMins(restMins);
+    setRestClockSecs(restSecs);
+    setRounds(0);
+    setWorkClockRunning(false)
+  }
 
   let roundsStyled = (
     <Grid className={classes.rounds} item>Rounds: {rounds}</Grid>
@@ -217,7 +229,7 @@ function Interval() {
   return (
     <>
       <Grid className={classes.clock} container>
-        <Grid className={restClockRunning && classes.restClock} item container>
+        <Grid justify="center" className={restClockRunning && classes.restClock} xs={12} item container>
           {countDownRunning === true && countDown > 0 ? tMinus : clock}
         </Grid>
         <Grid justify="center" item container>
@@ -225,10 +237,10 @@ function Interval() {
             <Button className={classes.button} onClick={startClock}>Start</Button>
           </Grid>
           <Grid item>
-            <Button className={classes.button} onClick={() => null}>Stop</Button>
+            <Button className={classes.button} onClick={stopClock}>Stop</Button>
           </Grid>
           <Grid item>
-            <Button className={classes.button} onClick={() => null}>Reset</Button>
+            <Button className={classes.button} onClick={reset}>Reset</Button>
           </Grid>
         </Grid>
         <Grid justify="center" alignItems="center" className={classes.rounds} item container>
