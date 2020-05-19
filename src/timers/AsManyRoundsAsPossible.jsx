@@ -18,7 +18,9 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     textShadow: '0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0)',
   },
-
+  timeLabel: {
+    fontSize: '1rem',
+  },
   button: {
     margin: theme.spacing(0, 2),
   }
@@ -70,8 +72,28 @@ function AsManyRoundsAsPossible() {
     setClockRunning(false);
   }
 
-  const clock = `${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
+  const formattedMinutesString = `${minutes.toString().padStart(2, '0')}`;
+  const formattedSecondsString = `${seconds.toString().padStart(2, '0')}`;
+  const clock = (
+    <>
+      <Grid justify="center" alignItems="flex-end" direction="column" xs={4} item container>
+        <Grid item>{formattedMinutesString}</Grid>
+        <Grid justify="center" item container>
+          <Grid className={classes.timeLabel} item>Minutes</Grid>
+        </Grid>
+      </Grid>
+      <Grid justify="center" direction="column" xs={4} item container>
+        <Grid item>:</Grid>
+      </Grid>
+      <Grid justify="center" alignItems="flex-start" direction="column" xs={4} item container>
+        <Grid item>{formattedSecondsString}</Grid>
+        <Grid justify="center" item container>
+          <Grid className={classes.timeLabel} item>Seconds</Grid>
+        </Grid>
+      </Grid>
+    </>
+  );
 
   useEffect(() => {
     const clockLogic = () => {
@@ -102,14 +124,14 @@ function AsManyRoundsAsPossible() {
 
   return (
     <>
-      <div className={classes.clock}>
-        {countDownRunning === true && countDown > 0 ? tMinus : clock}
-        <div>
-          <Button className={classes.button} onClick={startClock}>Start</Button>
-          <Button className={classes.button} onClick={stopClock}>Stop</Button>
-          <Button className={classes.button} onClick={reset}>Reset</Button>
-        </div>
-      </div>
+      <Grid className={classes.clock} container>
+      <Grid justify="center" xs={12} item container>{countDownRunning === true && countDown > 0 ? tMinus : clock}</Grid>
+        <Grid justify="center" item container>
+          <Grid item><Button className={classes.button} onClick={startClock}>Start</Button></Grid>
+          <Grid item><Button className={classes.button} onClick={stopClock}>Stop</Button></Grid>
+          <Grid item><Button className={classes.button} onClick={reset}>Reset</Button></Grid>
+        </Grid>
+      </Grid>
       <Grid justify="center" alignContent="center" container>
         <Grid item>
           <AmrapSlider amrap={amrap} setAMRAP={setSliderAndMinutes} />

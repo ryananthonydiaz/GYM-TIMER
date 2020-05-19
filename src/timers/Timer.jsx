@@ -61,6 +61,7 @@ function Timer() {
     setClockRunning(false)
   }
 
+  const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
   const formattedHoursString = `${hours.toString().padStart(2, '0')}:`;
   const formattedMinutesString = `${minutes.toString().padStart(2, '0')}`;
   const formattedSecondsString = `:${seconds.toString().padStart(2, '0')}`;
@@ -84,7 +85,6 @@ function Timer() {
       </Grid>
     </>
   );
-  const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
 
   useEffect(() => {
     const clockLogic = () => {
