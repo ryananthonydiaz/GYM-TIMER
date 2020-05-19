@@ -19,14 +19,14 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     textShadow: '0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0)',
   },
+  restClock: {
+    color: 'red',
+  },
+  rounds: {
+    fontSize: '2rem',
+  },
   gridItem: {
     alignSelf: 'center',
-  },
-  buttons:  {
-    position: 'absolute',
-    top: '60%',
-    left: '50%',
-    transform: 'translate(-50%)',
   },
   button: {
     margin: theme.spacing(0, 2),
@@ -178,15 +178,18 @@ function Interval() {
     return () => clearInterval(clockInterval);
   }, [workClockSecs, workClockMins, restClockSecs, restClockMins, countDown, workClockRunning, restClockRunning]);
 
-  // console.log(`work mins: ${workClockMins}\nwork secs: ${workClockSecs}`);
+
   return (
     <>
       <Grid justify="center" container>
           {intervalSetterComponent}
       </Grid>
       <div className={classes.clock}>
-        {countDownRunning === true && countDown > 0 ? tMinus : (restClockRunning ? restClock : workClock)}
-        <div className={classes.buttons}>
+        <div className={restClockRunning && classes.restClock}>
+          {countDownRunning === true && countDown > 0 ? tMinus : (restClockRunning ? restClock : workClock)}
+        </div>
+        <div className={classes.rounds}>Rounds: {rounds}</div>
+        <div>
           <Button className={classes.button} onClick={startClock}>Start</Button>
           <Button className={classes.button} onClick={() => null}>Stop</Button>
           <Button className={classes.button} onClick={() => null}>Reset</Button>
