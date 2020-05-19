@@ -10,10 +10,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function valuetext(value) {
-  return `${value}`;
-}
-
 function AmrapSlider({ amrap, setAMRAP }) {
   const classes = useStyles();
 

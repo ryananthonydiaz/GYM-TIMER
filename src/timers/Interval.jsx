@@ -35,6 +35,20 @@ const useStyles = makeStyles(theme => ({
 
 function Interval() {
   const classes = useStyles();
+  const [workRest, setWorkRest] = useState('WORK');
+  const [workMins, setWorkMins] = useState(0);
+  const [workSecs, setWorkSecs] = useState(0);
+  const [restMins, setRestMins] = useState(0);
+  const [restSecs, setRestSecs] = useState(0);
+
+  const setIntervalMins = () => {
+    if (workRest === 'WORK') {
+      // set work time
+    } else {
+      // set rest time
+    }
+  }
+
   const [clockRunning, setClockRunning] = useState(false);
   const [countDownRunning, setCountDownRunning] = useState(false);
   const [countDown, setCountDown] = useState(10);
@@ -68,22 +82,6 @@ function Interval() {
     setClockRunning(false)
   }
 
-  const clockLogic = () => {
-    if (clockRunning === true) {
-      if (seconds === 59) {
-        if (minutes === 59) {
-          setMinutes(0);
-          setSeconds(0);
-          return;
-        }
-        setSeconds(0);
-        setMinutes(mins => mins + 1);
-      } else {
-        setSeconds(secs => secs + 1);
-      }
-    }
-  }
-
   let roundsStyled = (
     <Grid className={classes.rounds} item>Rounds: {rounds}</Grid>
   );
@@ -98,7 +96,34 @@ function Interval() {
   const clock = `${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
 
+  const intervalSetterComponent = (
+    <IntervalSetter
+      workRest={workRest}
+      setWorkRest={setWorkRest}
+      mins={workRest === 'WORK' ? workMins : restMins}
+      setMins={workRest === 'WORK' ? setWorkMins : setRestMins}
+      secs={workRest === 'WORK' ? workSecs : restSecs}
+      setSecs={workRest === 'WORK' ? setWorkSecs : setRestSecs} 
+    />
+  );
+
   useEffect(() => {
+    const clockLogic = () => {
+      if (clockRunning === true) {
+        if (seconds === 59) {
+          if (minutes === 59) {
+            setMinutes(0);
+            setSeconds(0);
+            return;
+          }
+          setSeconds(0);
+          setMinutes(mins => mins + 1);
+        } else {
+          setSeconds(secs => secs + 1);
+        }
+      }
+    }
+
     let clockInterval = null;
 
     if (countDown === 0) {
@@ -108,10 +133,17 @@ function Interval() {
     return () => clearInterval(clockInterval);
   }, [seconds, minutes, countDown, clockRunning]);
 
+  console.log(`type: ${workRest}`);
+  console.log(`work mins: ${workMins}`);
+  console.log(`work secs: ${workSecs}`);
+
+  console.log(`rest mins: ${restMins}`);
+  console.log(`rest secs: ${restSecs}`);
+
   return (
     <>
       <Grid justify="center" container>
-          {clockRunning ? roundsStyled : <IntervalSetter />}
+          {clockRunning ? roundsStyled : intervalSetterComponent}
       </Grid>
       <div className={classes.clock}>
         {countDownRunning === true && countDown > 0 ? tMinus : clock}

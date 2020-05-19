@@ -113,22 +113,8 @@ function EveryMinuteOnTheMinute() {
       case 'Eight':
         setMinutes(8);
         break;
-    }
-  }
-
-  const clockLogic = () => {
-    if (clockRunning === true) {
-      if (seconds === 0) {
-        if (minutes === 0) {
-          setEMOMAmount(min);
-          setRounds(rnds => rnds + 1);
-          return;
-        }
-        setMinutes(minutes => minutes - 1);
-        setSeconds(59);
-      } else {
-        setSeconds(secs => secs - 1);
-      }
+        default:
+          break;
     }
   }
 
@@ -147,6 +133,22 @@ function EveryMinuteOnTheMinute() {
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
 
   useEffect(() => {
+    const clockLogic = () => {
+      if (clockRunning === true) {
+        if (seconds === 0) {
+          if (minutes === 0) {
+            setEMOMAmount(min);
+            setRounds(rnds => rnds + 1);
+            return;
+          }
+          setMinutes(minutes => minutes - 1);
+          setSeconds(59);
+        } else {
+          setSeconds(secs => secs - 1);
+        }
+      }
+    }
+
     let clockInterval = null;
 
     if (countDown === 0) {

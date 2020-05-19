@@ -1,8 +1,7 @@
-import React, { useState} from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
 
@@ -60,6 +59,8 @@ function MultipleSelect({ min, setMin }) {
     case 'Eight':
       selectLabel = 'Every 8 Minutes On The 8 Minutes';
       break;
+      default:
+        break;
   }
 
   const menuItems = minutes.map((minute) => (

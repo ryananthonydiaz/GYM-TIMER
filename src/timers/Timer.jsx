@@ -71,27 +71,27 @@ function Timer() {
     setClockRunning(false)
   }
 
-  const clockLogic = () => {
-    if (clockRunning === true) {
-      if (seconds === 59) {
-        if (minutes === 59) {
-          setHours(hrs => hrs + 1);
-          setMinutes(0);
-          setSeconds(0);
-          return;
-        }
-        setSeconds(0);
-        setMinutes(mins => mins + 1);
-      } else {
-        setSeconds(secs => secs + 1);
-      }
-    }
-  }
-
   const clock = `${hours.toString().padStart(2, '0')} : ${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
 
   useEffect(() => {
+    const clockLogic = () => {
+      if (clockRunning === true) {
+        if (seconds === 59) {
+          if (minutes === 59) {
+            setHours(hrs => hrs + 1);
+            setMinutes(0);
+            setSeconds(0);
+            return;
+          }
+          setSeconds(0);
+          setMinutes(mins => mins + 1);
+        } else {
+          setSeconds(secs => secs + 1);
+        }
+      }
+    }
+
     let clockInterval = null;
 
     if (countDown === 0) {

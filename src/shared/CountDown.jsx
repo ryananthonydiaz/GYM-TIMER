@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 function StandardRunningClock({ countDown, setCountDown }) {
-  const tenSecondCountDown = () => setCountDown(cntDown => cntDown - 1);
   const [countDownLabel, setCountDownLabel] = useState('')
 
   useEffect(() => {
+    const tenSecondCountDown = () => setCountDown(cntDown => cntDown - 1);
+    
     let countDownInterval = setInterval(tenSecondCountDown, 1000);
     setCountDownLabel(`${countDown.toString().padStart(2, '0')}`);
     if (countDown === 0) {

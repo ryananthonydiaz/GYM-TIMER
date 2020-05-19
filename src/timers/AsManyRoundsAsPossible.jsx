@@ -83,27 +83,27 @@ function AsManyRoundsAsPossible() {
     setClockRunning(false);
   }
 
-  const clockLogic = () => {
-    if (clockRunning === true) {
-      if (seconds === 0) {
-        // Time is up so don't do anything
-        if (minutes === 0 && seconds === 0) {
-          setClockRunning(false);
-          setAMRAP(0);
-          return;
-        }
-        setMinutes(minutes => minutes - 1);
-        setSeconds(59);
-      } else {
-        setSeconds(secs => secs - 1);
-      }
-    }
-  }
-
   const clock = `${minutes.toString().padStart(2, '0')} : ${seconds.toString().padStart(2, '0')}`;
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
 
   useEffect(() => {
+    const clockLogic = () => {
+      if (clockRunning === true) {
+        if (seconds === 0) {
+          // Time is up so don't do anything
+          if (minutes === 0 && seconds === 0) {
+            setClockRunning(false);
+            setAMRAP(0);
+            return;
+          }
+          setMinutes(minutes => minutes - 1);
+          setSeconds(59);
+        } else {
+          setSeconds(secs => secs - 1);
+        }
+      }
+    }
+    
     let clockInterval = null;
 
     if (countDown === 0) {
