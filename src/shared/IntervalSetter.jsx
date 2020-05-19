@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -14,6 +15,9 @@ const useStyles = makeStyles(theme => ({
       width: '80vw'
     }
   },
+  title: {
+    alignText: 'center',
+  }
 }));
 
 function IntervalSetter({ workRest, setWorkRest, mins, setMins, secs, setSecs }) {

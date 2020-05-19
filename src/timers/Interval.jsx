@@ -24,13 +24,17 @@ const useStyles = makeStyles(theme => ({
   },
   rounds: {
     fontSize: '2rem',
+    margin: theme.spacing(0, 0, 6, 0),
   },
   gridItem: {
     alignSelf: 'center',
   },
   button: {
     margin: theme.spacing(0, 2),
-  }
+  },
+  timeLabel: {
+    fontSize: '1rem',
+  },
 }));
 
 function Interval() {
@@ -81,7 +85,7 @@ function Interval() {
       return;
     }
     // If the clock is paused/stopped at 00:00:00
-    if (workMins > 0 || workSecs > 0 && workClockRunning === false) {
+    if ((workMins > 0 || workSecs > 0) && workClockRunning === false) {
       setCountDownRunning(true)
       setCountDown(10);
       setWorkClockRunning(true)
@@ -116,9 +120,40 @@ function Interval() {
     );
   }
 
-  const workClock = `${workClockMins.toString().padStart(2, '0')} : ${workClockSecs.toString().padStart(2, '0')}`;
-  const restClock = `${restClockMins.toString().padStart(2, '0')} : ${restClockSecs.toString().padStart(2, '0')}`;
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
+  const formattedWorkMinutesString = `${workClockMins.toString().padStart(2, '0')}`;
+  const formattedWorkSecondsString = `${workClockSecs.toString().padStart(2, '0')}`;
+  const formattedRestMinutesString = `${restClockMins.toString().padStart(2, '0')}`;
+  const formattedRestSecondsString = `${restClockSecs.toString().padStart(2, '0')}`;
+
+  let minutesToDisplay;
+  let secondsToDisplay;
+  if (restClockRunning === true) {
+    minutesToDisplay = formattedRestMinutesString;
+    secondsToDisplay = formattedRestSecondsString;
+  } else {
+    minutesToDisplay = formattedWorkMinutesString;
+    secondsToDisplay = formattedWorkSecondsString;
+  }
+  const clock = (
+    <>
+      <Grid justify="center" alignItems="flex-end" direction="column" xs={4} item container>
+        <Grid item>{minutesToDisplay}</Grid>
+        <Grid justify="center" item container>
+          <Grid className={classes.timeLabel} item>Minutes</Grid>
+        </Grid>
+      </Grid>
+      <Grid justify="center" alignItems="center" direction="column" xs={4} item container>
+        <Grid item>:</Grid>
+      </Grid>
+      <Grid justify="center" alignItems="flex-start" direction="column" xs={4} item container>
+        <Grid item>{secondsToDisplay}</Grid>
+        <Grid justify="center" item container>
+          <Grid className={classes.timeLabel} item>Seconds</Grid>
+        </Grid>
+      </Grid>
+    </>
+  );
 
   const intervalSetterComponent = (
     <IntervalSetter
@@ -181,17 +216,27 @@ function Interval() {
 
   return (
     <>
-      <div className={classes.clock}>
-        <div className={restClockRunning && classes.restClock}>
-          {countDownRunning === true && countDown > 0 ? tMinus : (restClockRunning ? restClock : workClock)}
-        </div>
-        <div className={classes.rounds}>Rounds: {rounds}</div>
-        <div>
-          <Button className={classes.button} onClick={startClock}>Start</Button>
-          <Button className={classes.button} onClick={() => null}>Stop</Button>
-          <Button className={classes.button} onClick={() => null}>Reset</Button>
-        </div>
-      </div>
+      <Grid className={classes.clock} container>
+        <Grid className={restClockRunning && classes.restClock} item container>
+          {countDownRunning === true && countDown > 0 ? tMinus : clock}
+        </Grid>
+        <Grid justify="center" item container>
+          <Grid item>
+            <Button className={classes.button} onClick={startClock}>Start</Button>
+          </Grid>
+          <Grid item>
+            <Button className={classes.button} onClick={() => null}>Stop</Button>
+          </Grid>
+          <Grid item>
+            <Button className={classes.button} onClick={() => null}>Reset</Button>
+          </Grid>
+        </Grid>
+        <Grid justify="center" alignItems="center" className={classes.rounds} item container>
+          <Grid item>
+            <div>Completed Rounds: {rounds}</div>
+          </Grid>
+        </Grid>
+      </Grid>
       <Grid justify="center" container>
           {intervalSetterComponent}
       </Grid>
