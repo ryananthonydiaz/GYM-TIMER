@@ -16,22 +16,9 @@ const useStyles = makeStyles(theme => ({
     fontWeight: '100',
     color: 'white',
     textAlign: 'center',
-    position: 'absolute',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%, -50%)',
     textShadow: '0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0)',
-    [theme.breakpoints.down('sm')]: {
-      top: '30%',
-      transform: 'translate(-50%, -30%)',
-    },
   },
-  buttons:  {
-    position: 'absolute',
-    top: '60%',
-    left: '50%',
-    transform: 'translate(-50%)',
-  },
+
   button: {
     margin: theme.spacing(0, 2),
   }
@@ -123,7 +110,7 @@ function AsManyRoundsAsPossible() {
 
       <div className={classes.clock}>
         {countDownRunning === true && countDown > 0 ? tMinus : clock}
-        <div className={classes.buttons}>
+        <div>
           <Button className={classes.button} onClick={startClock}>Start</Button>
           <Button className={classes.button} onClick={stopClock}>Stop</Button>
           <Button className={classes.button} onClick={reset}>Reset</Button>

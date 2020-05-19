@@ -21,20 +21,6 @@ const useStyles = makeStyles(theme => {
     clock: {
       ...fontStyle,
       textAlign: 'center',
-      position: 'absolute',
-      left: '50%',
-      top: '50%',
-      transform: 'translate(-50%, -50%)',
-      [theme.breakpoints.down('sm')]: {
-        top: '30%',
-        transform: 'translate(-50%, -30%)',
-      },
-    },
-    buttons:  {
-      position: 'absolute',
-      top: '60%',
-      left: '50%',
-      transform: 'translate(-50%)',
     },
     button: {
       margin: theme.spacing(0, 2),
@@ -167,7 +153,7 @@ function EveryMinuteOnTheMinute() {
       </Grid>
       <div className={classes.clock}>
         {countDownRunning === true && countDown > 0 ? tMinus : clock}
-        <div className={classes.buttons}>
+        <div>
           <Button className={classes.button} onClick={startClock}>Start</Button>
           <Button className={classes.button} onClick={stopClock}>Stop</Button>
           <Button className={classes.button} onClick={resetClock}>Reset</Button>
