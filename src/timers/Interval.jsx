@@ -77,6 +77,9 @@ function Interval() {
   }
 
   const startClock = () => {
+    if ((workMins === 0 && workSecs === 0) ||(restMins === 0 && restSecs === 0)) {
+      return;
+    }
     // If the clock is paused/stopped at 00:00:00
     if (workMins > 0 || workSecs > 0 && workClockRunning === false) {
       setCountDownRunning(true)
