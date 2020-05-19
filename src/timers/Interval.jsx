@@ -68,9 +68,11 @@ function Interval() {
     if (workRest === 'WORK') {
       setWorkMins(value);
       setWorkClockMins(value);
+      reset();
     } else {
       setRestMins(value);
       setRestClockMins(value);
+      reset();
     }
   }
 
@@ -78,9 +80,11 @@ function Interval() {
     if (workRest === 'WORK') {
       setWorkSecs(value);
       setWorkClockSecs(value);
+      reset();
     } else {
       setRestSecs(value);
       setRestClockSecs(value);
+      reset();
     }
   }
 
