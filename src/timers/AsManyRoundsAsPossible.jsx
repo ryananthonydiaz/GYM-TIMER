@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CountDown from '../shared/CountDown';
-import ByFiveSlider from '../shared/AmrapSlider';
+import AmrapSlider from '../shared/AmrapSlider';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -102,12 +102,6 @@ function AsManyRoundsAsPossible() {
 
   return (
     <>
-      <Grid justify="center" alignContent="center" container>
-        <Grid item>
-          <ByFiveSlider amrap={amrap} setAMRAP={setSliderAndMinutes} />
-        </Grid>
-      </Grid>
-
       <div className={classes.clock}>
         {countDownRunning === true && countDown > 0 ? tMinus : clock}
         <div>
@@ -116,6 +110,11 @@ function AsManyRoundsAsPossible() {
           <Button className={classes.button} onClick={reset}>Reset</Button>
         </div>
       </div>
+      <Grid justify="center" alignContent="center" container>
+        <Grid item>
+          <AmrapSlider amrap={amrap} setAMRAP={setSliderAndMinutes} />
+        </Grid>
+      </Grid>
     </>
   );
 }

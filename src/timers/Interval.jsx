@@ -181,9 +181,6 @@ function Interval() {
 
   return (
     <>
-      <Grid justify="center" container>
-          {intervalSetterComponent}
-      </Grid>
       <div className={classes.clock}>
         <div className={restClockRunning && classes.restClock}>
           {countDownRunning === true && countDown > 0 ? tMinus : (restClockRunning ? restClock : workClock)}
@@ -195,6 +192,9 @@ function Interval() {
           <Button className={classes.button} onClick={() => null}>Reset</Button>
         </div>
       </div>
+      <Grid justify="center" container>
+          {intervalSetterComponent}
+      </Grid>
     </>
   );
 }

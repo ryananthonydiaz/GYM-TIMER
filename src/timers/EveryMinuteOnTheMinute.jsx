@@ -146,11 +146,6 @@ function EveryMinuteOnTheMinute() {
 
   return (
     <>
-      <Grid justify="center" container>
-        <Grid item>
-          {clockRunning ? roundsStyled : <MultipleSelect min={min} setMin={setEMOMAmount} />}
-        </Grid>
-      </Grid>
       <div className={classes.clock}>
         {countDownRunning === true && countDown > 0 ? tMinus : clock}
         <div>
@@ -159,6 +154,11 @@ function EveryMinuteOnTheMinute() {
           <Button className={classes.button} onClick={resetClock}>Reset</Button>
         </div>
       </div>
+      <Grid justify="center" container>
+        <Grid item>
+          {clockRunning ? roundsStyled : <MultipleSelect min={min} setMin={setEMOMAmount} />}
+        </Grid>
+      </Grid>
     </>
   );
 }
