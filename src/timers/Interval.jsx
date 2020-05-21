@@ -1,10 +1,104 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import CountDown from '../shared/CountDown';
 import IntervalSetter from '../shared/IntervalSetter';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
+
+const initialState = {
+  workRestDropDown: 'WORK',
+  workSettingMinutes: 0, // this value will be coming in as a string - must be converted to number
+  workSettingSeconds: 0, // this value will be coming in as a string - must be converted to number
+  restSettingMinutes: 0, // this value will be coming in as a string - must be converted to number
+  restSettingsSeconds: 0, // this value will be coming in as a string - must be converted to number
+  workClockRunning: false,
+  restClockRunning: false,
+  countDownRunning: false,
+  countDown: 10,
+  rounds: 0,
+  workClockMins: 0,
+  workClockSecs: 0,
+  restClockMins: 0,
+  restClockSecs: 0,
+};
+
+function intervalReducer(state, action) {
+  switch (action.type) {
+    case 'SET_WORK_REST_DROP_DOWN':
+      return {
+        ...state,
+        workRestDropDown: action.payload,
+      };
+    case 'SET_WORK_SETTING_MINS':
+      return {
+        ...state,
+        workSettingMinutes: action.payload,
+      };
+    case 'SET_WORK_SETTING_SECS':
+      return {
+        ...state,
+        workSettingSeconds: action.payload,
+      };
+    case 'SET_REST_SETTING_MINS':
+      return {
+        ...state,
+        restSettingMinutes: action.payload,
+      };
+    case 'SET_REST_SETTING_SECS':
+      return {
+        ...state,
+        restSettingsSeconds: action.payload,
+      };
+    case 'SET_WORK_CLOCK_RUNNING':
+      return {
+        ...state,
+        workClockRunning: action.payload,
+      };
+    case 'SET_REST_CLOCK_RUNNING':
+      return {
+        ...state,
+        restClockRunning: action.payload,
+      };
+    case 'SET_COUNTDOWN_RUNNING':
+      return {
+        ...state,
+        countDownRunning: action.payload,
+      };
+    case 'SET_COUNTDOWN':
+      return {
+        ...state,
+        countDown: action.payload,
+      };
+    case 'SET_ROUNDS':
+      return {
+        ...state,
+        rounds: action.payload,
+      };
+    case 'SET_WORK_CLOCK_MINS':
+      return {
+        ...state,
+        workClockMins: action.payload,
+      };
+    case 'SET_WORK_CLOCK_SECS':
+      return {
+        ...state,
+        workClockSecs: action.payload,
+      };
+    case 'SET_REST_CLOCK_MINS':
+      return {
+        ...state,
+        restClockMins: action.payload,
+      };
+    case 'SET_REST_CLOCK_SECS':
+      return {
+        ...state,
+        restClockSecs: action.payload,
+      };
+      default:
+        throw new Error();
+  }
+}
 
 const useStyles = makeStyles(theme => ({
   clock: {
@@ -44,56 +138,56 @@ const useStyles = makeStyles(theme => ({
 function Interval() {
   const classes = useStyles();
 
-  // State for interval setter component
-  const [workRest, setWorkRest] = useState('WORK');
-  const [workMins, setWorkMins] = useState(0);
-  const [workSecs, setWorkSecs] = useState(0);
-  const [restMins, setRestMins] = useState(0);
-  const [restSecs, setRestSecs] = useState(0);
+  const [state, dispatch] = useReducer(intervalReducer, initialState);
+  const {
+    workRestDropDown,
+    workSettingMinutes,
+    workSettingSeconds,
+    restSettingMinutes,
+    restSettingSeconds,
+    workClockRunning,
+    restClockRunning,
+    countDownRunning,
+    countDown,
+    rounds,
+    workClockMins,
+    workClockSecs,
+    restClockMins,
+    restClockSecs,
+  } = state;
 
-  const [workClockRunning, setWorkClockRunning] = useState(false);
-  const [restClockRunning, setRestClockRunning] = useState(false);
-  const [countDownRunning, setCountDownRunning] = useState(false);
-
-  const [countDown, setCountDown] = useState(10);
-  const [rounds, setRounds] = useState(0);
-
-  const [workClockMins, setWorkClockMins] = useState(0);
-  const [workClockSecs, setWorkClockSecs] = useState(0);
-
-  const [restClockMins, setRestClockMins] = useState(0);
-  const [restClockSecs, setRestClockSecs] = useState(0);
+  console.log(state)
 
   const initiateMins = (value) => {
-    if (workRest === 'WORK') {
-      setWorkMins(() => value);
-      setWorkClockMins(() => value);
+    if (workRestDropDown === 'WORK') {
+      dispatch({ type: 'SET_WORK_SETTING_MINS', payload: value });
+      dispatch({ type: 'SET_WORK_CLOCK_MINS', payload: value });
     } else {
-      setRestMins(() => value);
-      setRestClockMins(() => value);
+      dispatch({ type: 'SET_REST_SETTING_MINS', payload: value });
+      dispatch({ type: 'SET_REST_CLOCK_MINS', payload: value });
     }
 
     reset();
   }
 
   const initiateSecs = (value) => {
-    if (workRest === 'WORK') {
-      setWorkSecs(() => value);
-      setWorkClockSecs(() => value);
+    if (workRestDropDown === 'WORK') {
+      dispatch({ type: 'SET_WORK_SETTING_SECS', payload: value });
+      dispatch({ type: 'SET_WORK_CLOCK_SECS', payload: value });
     } else {
-      setRestSecs(() => value);
-      setRestClockSecs(() => value);
+      dispatch({ type: 'SET_REST_SETTING_SECS', payload: value });
+      dispatch({ type: 'SET_REST_CLOCK_SECS', payload: value });
     }
 
     reset();
   }
 
   const startClock = () => {
-    if ((workMins === 0 && workSecs === 0) ||(restMins === 0 && restSecs === 0)) {
+    if ((workSettingMinutes === 0 && workSettingSeconds === 0) ||(restMins === 0 && restSecs === 0)) {
       return;
     }
     // If the clock is paused/stopped at 00:00:00
-    if ((workClockMins === workMins && workClockSecs === workSecs) && workClockRunning === false) {
+    if ((workClockMins === workSettingMinutes && workClockSecs === workSettingSeconds) && workClockRunning === false) {
       setCountDownRunning(true)
       setCountDown(10);
       setWorkClockRunning(true)
@@ -117,8 +211,8 @@ function Interval() {
   };
 
   const reset = () => {
-    setWorkClockMins(workMins);
-    setWorkClockSecs(workSecs);
+    setWorkClockMins(workSettingMinutes);
+    setWorkClockSecs(workSettingSeconds);
     setRestClockMins(restMins);
     setRestClockSecs(restSecs);
     setRounds(0);
@@ -175,11 +269,11 @@ function Interval() {
 
   const intervalSetterComponent = (
     <IntervalSetter
-      workRest={workRest}
+      workRest={workRestDropDown}
       setWorkRest={setWorkRest}
-      mins={workRest === 'WORK' ? workMins : restMins}
+      mins={workRest === 'WORK' ? workSettingMinutes : restSettingMinutes}
       setMins={initiateMins}
-      secs={workRest === 'WORK' ? workSecs : restSecs}
+      secs={workRest === 'WORK' ? workSettingSeconds : restSettingSeconds}
       setSecs={initiateSecs} 
     />
   );
@@ -195,8 +289,8 @@ function Interval() {
             // set rest clock running to true and reset the work clock to the top of the interval add 1 to rounds
             setRestClockRunning(true);
             setWorkClockRunning(false);
-            setWorkClockMins(workMins);
-            setWorkClockSecs(workSecs);
+            setWorkClockMins(workSettingMinutes);
+            setWorkClockSecs(workSettingSeconds);
 
             setRounds(rnds => rnds + 1);
             return;
