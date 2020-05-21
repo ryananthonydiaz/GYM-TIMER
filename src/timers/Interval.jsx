@@ -66,26 +66,26 @@ function Interval() {
 
   const initiateMins = (value) => {
     if (workRest === 'WORK') {
-      setWorkMins(value);
-      setWorkClockMins(value);
-      reset();
+      setWorkMins(() => value);
+      setWorkClockMins(() => value);
     } else {
-      setRestMins(value);
-      setRestClockMins(value);
-      reset();
+      setRestMins(() => value);
+      setRestClockMins(() => value);
     }
+
+    reset();
   }
 
   const initiateSecs = (value) => {
     if (workRest === 'WORK') {
-      setWorkSecs(value);
-      setWorkClockSecs(value);
-      reset();
+      setWorkSecs(() => value);
+      setWorkClockSecs(() => value);
     } else {
-      setRestSecs(value);
-      setRestClockSecs(value);
-      reset();
+      setRestSecs(() => value);
+      setRestClockSecs(() => value);
     }
+
+    reset();
   }
 
   const startClock = () => {
@@ -122,17 +122,19 @@ function Interval() {
     setRestClockMins(restMins);
     setRestClockSecs(restSecs);
     setRounds(0);
-    setWorkClockRunning(false)
+    setWorkClockRunning(false);
   }
 
   let roundsStyled = (
-    <Grid className={classes.rounds} item>Rounds: {rounds}</Grid>
+    <Grid className={classes.rounds} item>Completed Rounds: {rounds}</Grid>
   );
   
   const matches = useMediaQuery('(max-width:600px)');
   if (matches === true) {
     roundsStyled = (
-      <div className={classes.rounds}>Rnds: {rounds}</div>
+      <Grid item>
+        <div>Completed Rounds: {rounds}</div>
+      </Grid>
     );
   }
 
@@ -182,6 +184,8 @@ function Interval() {
     />
   );
 
+  const intervalRunning = workClockRunning || restClockRunning;
+
   useEffect(() => {
     const clockLogic = () => {
       if (workClockRunning === true) {
@@ -227,13 +231,22 @@ function Interval() {
     }
 
     return () => clearInterval(clockInterval);
-  }, [workClockSecs, workClockMins, restClockSecs, restClockMins, countDown, workClockRunning, restClockRunning]);
+  }, [countDown, workClockSecs, workClockMins, workClockRunning, restClockSecs, restClockMins, restClockRunning]);
 
+  let restClockStyles = '';
+  if (restClockRunning === true) {
+    restClockStyles = classes.restClock;
+  }
+
+  let roundsStyles = '';
+  if (intervalRunning === true) {
+    roundsStyles = classes.round;
+  }
 
   return (
     <>
       <Grid className={classes.clock} container>
-        <Grid justify="center" className={restClockRunning && classes.restClock} xs={12} item container>
+        <Grid justify="center" className={restClockStyles} xs={12} item container>
           {countDownRunning === true && countDown > 0 ? tMinus : clock}
         </Grid>
         <Grid justify="center" item container>
@@ -247,14 +260,11 @@ function Interval() {
             <Button className={classes.button} onClick={reset}>Reset</Button>
           </Grid>
         </Grid>
-        <Grid justify="center" alignItems="center" className={classes.rounds} item container>
-          <Grid item>
-            <div>Completed Rounds: {rounds}</div>
-          </Grid>
-        </Grid>
       </Grid>
-      <Grid justify="center" container>
-          {intervalSetterComponent}
+      <Grid justify="center" alignItems="center" className={roundsStyles} container>
+        <Grid item>
+          {intervalRunning ? roundsStyled : intervalSetterComponent}
+        </Grid>
       </Grid>
     </>
   );

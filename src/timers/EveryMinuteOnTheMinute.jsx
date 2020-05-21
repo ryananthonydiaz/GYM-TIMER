@@ -29,11 +29,9 @@ const useStyles = makeStyles(theme => {
       margin: theme.spacing(0, 2),
     },
     rounds: {
-      ...fontStyle,
-      color: 'red',
-      textAlign: 'center',
-      textShadow: '',
-    }
+      fontSize: '2rem',
+      margin: theme.spacing(0, 0, 6, 0),
+    },
   });
 });
 
@@ -108,7 +106,11 @@ function EveryMinuteOnTheMinute() {
   }
 
   let roundsStyled = (
-    <div className={classes.rounds}>Rounds: {rounds}</div>
+    <Grid justify="center" alignItems="center" className={classes.rounds} item container>
+    <Grid item>
+      <div>Completed Rounds: {rounds}</div>
+    </Grid>
+  </Grid>
   );
   
   const matches = useMediaQuery('(max-width:600px)');
