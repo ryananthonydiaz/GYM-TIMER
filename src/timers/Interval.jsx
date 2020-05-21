@@ -11,7 +11,7 @@ const initialState = {
   workSettingMinutes: 0, // this value will be coming in as a string - must be converted to number
   workSettingSeconds: 0, // this value will be coming in as a string - must be converted to number
   restSettingMinutes: 0, // this value will be coming in as a string - must be converted to number
-  restSettingsSeconds: 0, // this value will be coming in as a string - must be converted to number
+  restSettingSeconds: 0, // this value will be coming in as a string - must be converted to number
   workClockRunning: false,
   restClockRunning: false,
   countDownRunning: false,
@@ -22,6 +22,8 @@ const initialState = {
   restClockMins: 0,
   restClockSecs: 0,
 };
+
+const resetState = () => initialState;
 
 function intervalReducer(state, action) {
   switch (action.type) {
@@ -75,10 +77,25 @@ function intervalReducer(state, action) {
         ...state,
         rounds: action.payload,
       };
+    case 'INCREMENT_ROUNDS':
+      return {
+        ...state,
+        rounds: state.rounds + 1,
+      };
     case 'SET_WORK_CLOCK_MINS':
       return {
         ...state,
         workClockMins: action.payload,
+      };
+    case 'DECREMENT_WORK_CLOCK_MINS':
+      return {
+        ...state,
+        workClockMins: state.workClockMins - 1,
+      };
+    case 'DECREMENT_WORK_CLOCK_SECS':
+      return {
+        ...state,
+        workClockSecs: state.workClockSecs - 1,
       };
     case 'SET_WORK_CLOCK_SECS':
       return {
@@ -94,6 +111,16 @@ function intervalReducer(state, action) {
       return {
         ...state,
         restClockSecs: action.payload,
+      };
+    case 'DECREMENT_REST_CLOCK_MINS':
+      return {
+        ...state,
+        restClockMins: state.restClockMins - 1,
+      };
+    case 'DECREMENT_REST_CLOCK_SECS':
+      return {
+        ...state,
+        restClockSecs: state.restClockSecs - 1,
       };
       default:
         throw new Error();
@@ -156,67 +183,68 @@ function Interval() {
     restClockSecs,
   } = state;
 
-  console.log(state)
+  console.log(state);
+
+  const dispatchNewState = (type, payload) => dispatch({ type, payload });
 
   const initiateMins = (value) => {
     if (workRestDropDown === 'WORK') {
-      dispatch({ type: 'SET_WORK_SETTING_MINS', payload: value });
-      dispatch({ type: 'SET_WORK_CLOCK_MINS', payload: value });
+      dispatchNewState('SET_WORK_SETTING_MINS', value);
+      dispatchNewState('SET_WORK_CLOCK_MINS', value);
     } else {
-      dispatch({ type: 'SET_REST_SETTING_MINS', payload: value });
-      dispatch({ type: 'SET_REST_CLOCK_MINS', payload: value });
+      dispatchNewState('SET_REST_SETTING_MINS', value);
+      dispatchNewState('SET_REST_CLOCK_MINS', value);
     }
-
-    reset();
   }
 
   const initiateSecs = (value) => {
     if (workRestDropDown === 'WORK') {
-      dispatch({ type: 'SET_WORK_SETTING_SECS', payload: value });
-      dispatch({ type: 'SET_WORK_CLOCK_SECS', payload: value });
+      dispatchNewState('SET_WORK_SETTING_SECS', value);
+      dispatchNewState('SET_WORK_CLOCK_SECS', value);
     } else {
-      dispatch({ type: 'SET_REST_SETTING_SECS', payload: value });
-      dispatch({ type: 'SET_REST_CLOCK_SECS', payload: value });
+      console.log('this ran')
+      dispatchNewState('SET_REST_SETTING_SECS', value);
+      dispatchNewState('SET_REST_CLOCK_SECS', value);
     }
-
-    reset();
   }
 
   const startClock = () => {
-    if ((workSettingMinutes === 0 && workSettingSeconds === 0) ||(restMins === 0 && restSecs === 0)) {
+    if ((workSettingMinutes === 0 && workSettingSeconds === 0) ||(restSettingMinutes === 0 && restSettingSeconds === 0)) {
       return;
     }
     // If the clock is paused/stopped at 00:00:00
     if ((workClockMins === workSettingMinutes && workClockSecs === workSettingSeconds) && workClockRunning === false) {
-      setCountDownRunning(true)
-      setCountDown(10);
-      setWorkClockRunning(true)
+      dispatchNewState('SET_COUNTDOWN_RUNNING', true);
+      dispatchNewState('SET_COUNTDOWN', 10);
+      dispatchNewState('SET_WORK_CLOCK_RUNNING', true);
     } else {
-      setWorkClockRunning(true);
+      dispatchNewState('SET_WORK_CLOCK_RUNNING', true);
     }
   }
 
   const stopClock = () => {
     if (countDownRunning === true) {
-      setCountDownRunning(false);
+      dispatchNewState('SET_COUNTDOWN_RUNNING', false);
     }
 
     if (workClockRunning === true) {
-      setWorkClockRunning(false);
+      dispatchNewState('SET_WORK_CLOCK_RUNNING', false);
     }
 
     if (restClockRunning === true) {
-      setRestClockRunning(false);
+      dispatchNewState('SET_REST_CLOCK_RUNNING', false);
     }
   };
 
   const reset = () => {
-    setWorkClockMins(workSettingMinutes);
-    setWorkClockSecs(workSettingSeconds);
-    setRestClockMins(restMins);
-    setRestClockSecs(restSecs);
-    setRounds(0);
-    setWorkClockRunning(false);
+    dispatchNewState('SET_WORK_CLOCK_MINS', workSettingMinutes);
+
+    dispatchNewState('SET_WORK_CLOCK_SECS', workSettingSeconds);
+    dispatchNewState('SET_REST_CLOCK_MINS', restSettingMinutes);
+
+    dispatchNewState('SET_REST_CLOCK_SECS', restSettingSeconds);
+    dispatchNewState('SET_ROUNDS', 0);
+    dispatchNewState('SET_WORK_CLOCK_RUNNING', false);
   }
 
   let roundsStyled = (
@@ -232,7 +260,7 @@ function Interval() {
     );
   }
 
-  const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
+  const tMinus = <CountDown countDown={countDown} setCountDown={(value) => dispatchNewState('SET_COUNTDOWN', value)} />;
   const formattedWorkMinutesString = `${workClockMins.toString().padStart(2, '0')}`;
   const formattedWorkSecondsString = `${workClockSecs.toString().padStart(2, '0')}`;
   const formattedRestMinutesString = `${restClockMins.toString().padStart(2, '0')}`;
@@ -270,10 +298,10 @@ function Interval() {
   const intervalSetterComponent = (
     <IntervalSetter
       workRest={workRestDropDown}
-      setWorkRest={setWorkRest}
-      mins={workRest === 'WORK' ? workSettingMinutes : restSettingMinutes}
+      setWorkRest={(setting) => dispatchNewState('SET_WORK_REST_DROP_DOWN', setting)}
+      mins={workRestDropDown === 'WORK' ? workSettingMinutes : restSettingMinutes}
       setMins={initiateMins}
-      secs={workRest === 'WORK' ? workSettingSeconds : restSettingSeconds}
+      secs={workRestDropDown === 'WORK' ? workSettingSeconds : restSettingSeconds}
       setSecs={initiateSecs} 
     />
   );
@@ -287,33 +315,33 @@ function Interval() {
           // Interval is complete if next if is true
           if (workClockMins === 0) {
             // set rest clock running to true and reset the work clock to the top of the interval add 1 to rounds
-            setRestClockRunning(true);
-            setWorkClockRunning(false);
-            setWorkClockMins(workSettingMinutes);
-            setWorkClockSecs(workSettingSeconds);
+            dispatchNewState('SET_REST_CLOCK_RUNNING', true);
+            dispatchNewState('SET_WORK_CLOCK_RUNNING', false);
+            dispatchNewState('SET_WORK_CLOCK_MINS', workSettingMinutes);
+            dispatchNewState('SET_WORK_CLOCK_SECS', workSettingSeconds);
 
-            setRounds(rnds => rnds + 1);
+            dispatchNewState('INCREMENT_ROUNDS');
             return;
           }
-          setWorkClockSecs(59);
-          setWorkClockMins(mins => mins - 1);
+          dispatchNewState('SET_WORK_CLOCK_SECS', 59);
+          dispatchNewState('DECREMENT_WORK_CLOCK_MINS');
         } else {
-          setWorkClockSecs(secs => secs - 1);
+          dispatchNewState('DECREMENT_WORK_CLOCK_SECS');
         }
       } else {
         // rest clock logic (use logic from above)
         if (restClockSecs === 0) {
           if (restClockMins === 0) {
-            setWorkClockRunning(true);
-            setRestClockRunning(false);
-            setRestClockMins(restMins);
-            setRestClockSecs(restSecs);
+            dispatchNewState('SET_WORK_CLOCK_RUNNING', true);
+            dispatchNewState('SET_REST_CLOCK_RUNNING', false);
+            dispatchNewState('SET_REST_CLOCK_MINS', restSettingMinutes);
+            dispatchNewState('SET_REST_CLOCK_SECS', restSettingSeconds);
             return;
           }
-          setRestClockSecs(59);
-          setRestClockMins(mins => mins - 1);
+          dispatchNewState('SET_REST_CLOCK_SECS', 59);
+          dispatchNewState('DECREMENT_REST_CLOCK_MINS');
         } else {
-          setRestClockSecs(secs => secs - 1);
+          dispatchNewState('DECREMENT_REST_CLOCK_SECS');
         }
       }
     }
