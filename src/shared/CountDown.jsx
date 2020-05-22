@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -10,12 +10,12 @@ const useStyles = makeStyles({
 
 function CountDown({ countDown, setCountDown }) {
   const classes = useStyles();
-  const [countDownLabel, setCountDownLabel] = useState('')
+  const [countDownLabel, setCountDownLabel] = useState('');
+
+  const memoizedSetCountDown = useCallback(() => setCountDown(cntDwn => cntDwn - 1), [setCountDown]);
 
   useEffect(() => {
-    const tenSecondCountDown = () => setCountDown(countDown - 1);
-    
-    let countDownInterval = setInterval(tenSecondCountDown, 1000);
+    let countDownInterval = setInterval(memoizedSetCountDown, 1000);
     setCountDownLabel(`${countDown.toString().padStart(2, '0')}`);
     if (countDown === 0) {
       clearInterval(countDownInterval);
@@ -23,7 +23,7 @@ function CountDown({ countDown, setCountDown }) {
     }
 
     return () => clearInterval(countDownInterval);
-  }, [countDown]);
+  }, [countDown, memoizedSetCountDown]);
 
   return (
     <Grid justify="center" alignItems="center" direction="column" xs={4} item container>

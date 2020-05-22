@@ -3,7 +3,6 @@ import MultipleSelect from '../shared/MultipleSelect';
 import CountDown from '../shared/CountDown';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => {
@@ -163,7 +162,7 @@ function EveryMinuteOnTheMinute() {
     }
 
     return () => clearInterval(clockInterval);
-  }, [minutes, seconds, clockRunning, countDown]);
+  }, [min, minutes, seconds, clockRunning, countDown]);
 
   return (
     <>

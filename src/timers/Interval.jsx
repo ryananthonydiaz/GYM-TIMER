@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import CountDown from '../shared/CountDown';
 import IntervalSetter from '../shared/IntervalSetter';
 import Button from '@material-ui/core/Button';
@@ -22,8 +22,6 @@ const initialState = {
   restClockMins: 0,
   restClockSecs: 0,
 };
-
-const resetState = () => initialState;
 
 function intervalReducer(state, action) {
   switch (action.type) {
@@ -355,7 +353,17 @@ function Interval() {
     }
 
     return () => clearInterval(clockInterval);
-  }, [countDown, workClockSecs, workClockMins, workClockRunning, restClockSecs, restClockMins, restClockRunning]);
+  }, [countDown,
+    workClockSecs,
+    workClockMins,
+    workClockRunning,
+    workSettingMinutes,
+    workSettingSeconds,
+    restClockSecs,
+    restClockMins,
+    restSettingMinutes,
+    restSettingSeconds,
+    restClockRunning]);
 
   let restClockStyles = '';
   if (restClockRunning === true) {
