@@ -144,8 +144,11 @@ const useStyles = makeStyles(theme => ({
     color: 'red',
   },
   rounds: {
-    fontSize: '2rem',
+    fontSize: '5rem',
     margin: theme.spacing(0, 0, 6, 0),
+    [theme.breakpoints.down('md')]: {
+      fontSize: '2rem',
+    }
   },
   gridItem: {
     alignSelf: 'center',
@@ -250,11 +253,11 @@ function Interval() {
     <Grid className={classes.rounds} item>Completed Rounds: {rounds}</Grid>
   );
   
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery('(max-width:700px)');
   if (matches === true) {
     roundsStyled = (
       <Grid item>
-        <div>Completed Rounds: {rounds}</div>
+        <div className={classes.rounds}>Completed Rounds: {rounds}</div>
       </Grid>
     );
   }
@@ -359,11 +362,6 @@ function Interval() {
     restClockStyles = classes.restClock;
   }
 
-  let roundsStyles = '';
-  if (intervalRunning === true) {
-    roundsStyles = classes.round;
-  }
-
   return (
     <>
       <Grid className={classes.clock} container>
@@ -382,7 +380,7 @@ function Interval() {
           </Grid>
         </Grid>
       </Grid>
-      <Grid justify="center" alignItems="center" className={roundsStyles} container>
+      <Grid justify="center" alignItems="center" container>
         <Grid item>
           {intervalRunning ? roundsStyled : intervalSetterComponent}
         </Grid>
