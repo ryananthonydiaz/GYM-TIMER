@@ -1,9 +1,8 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import CountDown from '../shared/CountDown';
 import IntervalSetter from '../shared/IntervalSetter';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
 
 const initialState = {
@@ -64,11 +63,6 @@ function intervalReducer(state, action) {
       return {
         ...state,
         countDownRunning: action.payload,
-      };
-    case 'SET_COUNTDOWN':
-      return {
-        ...state,
-        countDown: action.payload,
       };
     case 'SET_ROUNDS':
       return {
@@ -165,7 +159,7 @@ const useStyles = makeStyles(theme => ({
 
 function Interval() {
   const classes = useStyles();
-
+  const [countDown, setCountDown] = useState(10);
   const [state, dispatch] = useReducer(intervalReducer, initialState);
   const {
     workRestDropDown,
@@ -176,7 +170,6 @@ function Interval() {
     workClockRunning,
     restClockRunning,
     countDownRunning,
-    countDown,
     rounds,
     workClockMins,
     workClockSecs,
@@ -189,10 +182,10 @@ function Interval() {
   const initiateMins = (value) => {
     if (workRestDropDown === 'WORK') {
       dispatchNewState('SET_WORK_SETTING_MINS', value);
-      dispatchNewState('SET_WORK_CLOCK_MINS', value);
+      dispatchNewState('SET_WORK_CLOCK_MINS', parseInt(value));
     } else {
       dispatchNewState('SET_REST_SETTING_MINS', value);
-      dispatchNewState('SET_REST_CLOCK_MINS', value);
+      dispatchNewState('SET_REST_CLOCK_MINS', parseInt(value));
     }
   }
 
@@ -213,7 +206,7 @@ function Interval() {
     // If the clock is paused/stopped at 00:00:00
     if ((workClockMins === parseInt(workSettingMinutes) && workClockSecs === parseInt(workSettingSeconds)) && workClockRunning === false) {
       dispatchNewState('SET_COUNTDOWN_RUNNING', true);
-      dispatchNewState('SET_COUNTDOWN', 10);
+      setCountDown(10);
       dispatchNewState('SET_WORK_CLOCK_RUNNING', true);
     } else {
       dispatchNewState('SET_WORK_CLOCK_RUNNING', true);
@@ -250,17 +243,9 @@ function Interval() {
   let roundsStyled = (
     <Grid className={classes.rounds} item>Completed Rounds: {rounds}</Grid>
   );
-  
-  const matches = useMediaQuery('(max-width:700px)');
-  if (matches === true) {
-    roundsStyled = (
-      <Grid item>
-        <div className={classes.rounds}>Completed Rounds: {rounds}</div>
-      </Grid>
-    );
-  }
 
-  const tMinus = <CountDown countDown={countDown} setCountDown={(value) => dispatchNewState('SET_COUNTDOWN', value)} />;
+
+  const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
   const formattedWorkMinutesString = `${workClockMins.toString().padStart(2, '0')}`;
   const formattedWorkSecondsString = `${workClockSecs.toString().padStart(2, '0')}`;
   const formattedRestMinutesString = `${restClockMins.toString().padStart(2, '0')}`;
