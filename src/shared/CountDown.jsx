@@ -8,12 +8,12 @@ const useStyles = makeStyles({
   },
 });
 
-function StandardRunningClock({ countDown, setCountDown }) {
+function CountDown({ countDown, setCountDown }) {
   const classes = useStyles();
   const [countDownLabel, setCountDownLabel] = useState('')
 
   useEffect(() => {
-    const tenSecondCountDown = () => setCountDown(cntDown => cntDown - 1);
+    const tenSecondCountDown = () => setCountDown(countDown - 1);
     
     let countDownInterval = setInterval(tenSecondCountDown, 1000);
     setCountDownLabel(`${countDown.toString().padStart(2, '0')}`);
@@ -35,4 +35,4 @@ function StandardRunningClock({ countDown, setCountDown }) {
   );
 }
 
-export default StandardRunningClock;
+export default CountDown;

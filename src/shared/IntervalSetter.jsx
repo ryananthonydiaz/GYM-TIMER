@@ -32,7 +32,10 @@ function IntervalSetter({ workRest, setWorkRest, mins, setMins, secs, setSecs })
     setMins(event.target.value)
   };
 
-  const handleSecsChange = event => setSecs(event.target.value);
+  const handleSecsChange = event => {
+    console.log(event.target.value)
+    setSecs(event.target.value)
+  };
   
   const minuteOptions = [];
   for (let minOpt = 0; minOpt <= 10; minOpt++) {

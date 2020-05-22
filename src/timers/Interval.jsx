@@ -50,7 +50,7 @@ function intervalReducer(state, action) {
     case 'SET_REST_SETTING_SECS':
       return {
         ...state,
-        restSettingsSeconds: action.payload,
+        restSettingSeconds: action.payload,
       };
     case 'SET_WORK_CLOCK_RUNNING':
       return {
@@ -183,8 +183,6 @@ function Interval() {
     restClockSecs,
   } = state;
 
-  console.log(state);
-
   const dispatchNewState = (type, payload) => dispatch({ type, payload });
 
   const initiateMins = (value) => {
@@ -200,11 +198,10 @@ function Interval() {
   const initiateSecs = (value) => {
     if (workRestDropDown === 'WORK') {
       dispatchNewState('SET_WORK_SETTING_SECS', value);
-      dispatchNewState('SET_WORK_CLOCK_SECS', value);
+      dispatchNewState('SET_WORK_CLOCK_SECS', parseInt(value));
     } else {
-      console.log('this ran')
       dispatchNewState('SET_REST_SETTING_SECS', value);
-      dispatchNewState('SET_REST_CLOCK_SECS', value);
+      dispatchNewState('SET_REST_CLOCK_SECS', parseInt(value));
     }
   }
 
@@ -213,7 +210,7 @@ function Interval() {
       return;
     }
     // If the clock is paused/stopped at 00:00:00
-    if ((workClockMins === workSettingMinutes && workClockSecs === workSettingSeconds) && workClockRunning === false) {
+    if ((workClockMins === parseInt(workSettingMinutes) && workClockSecs === parseInt(workSettingSeconds)) && workClockRunning === false) {
       dispatchNewState('SET_COUNTDOWN_RUNNING', true);
       dispatchNewState('SET_COUNTDOWN', 10);
       dispatchNewState('SET_WORK_CLOCK_RUNNING', true);
@@ -234,15 +231,17 @@ function Interval() {
     if (restClockRunning === true) {
       dispatchNewState('SET_REST_CLOCK_RUNNING', false);
     }
+    dispatchNewState('SET_REST_CLOCK_MINS', parseInt(restSettingMinutes));
+    dispatchNewState('SET_REST_CLOCK_SECS', parseInt(restSettingSeconds));    
   };
 
   const reset = () => {
-    dispatchNewState('SET_WORK_CLOCK_MINS', workSettingMinutes);
+    dispatchNewState('SET_WORK_CLOCK_MINS', parseInt(workSettingMinutes));
 
-    dispatchNewState('SET_WORK_CLOCK_SECS', workSettingSeconds);
-    dispatchNewState('SET_REST_CLOCK_MINS', restSettingMinutes);
+    dispatchNewState('SET_WORK_CLOCK_SECS', parseInt(workSettingSeconds));
+    dispatchNewState('SET_REST_CLOCK_MINS', parseInt(restSettingMinutes));
 
-    dispatchNewState('SET_REST_CLOCK_SECS', restSettingSeconds);
+    dispatchNewState('SET_REST_CLOCK_SECS', parseInt(restSettingSeconds));
     dispatchNewState('SET_ROUNDS', 0);
     dispatchNewState('SET_WORK_CLOCK_RUNNING', false);
   }
