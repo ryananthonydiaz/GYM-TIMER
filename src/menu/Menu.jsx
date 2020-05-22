@@ -27,9 +27,9 @@ const useStyles = makeStyles((theme) => ({
 
 const actions = [
   { icon: <RepeatIcon />, name: 'EMOM', timerType: 'EMOM' },
-  { icon: <FitnessCenterIcon />, name: 'AMRAP', timerType: 'AMRAP' },
   { icon: <DirectionsRunIcon />, name: 'Interval', timerType: 'INTERVAL' },
-  { icon: <TimerIcon />, name: 'Timer', timerType: 'TIMER' },
+  { icon: <FitnessCenterIcon />, name: 'AMRAP', timerType: 'AMRAP' },
+  { icon: <TimerIcon />, name: 'StopWatch', timerType: 'TIMER' },
 ];
 
 export default function Menu() {
