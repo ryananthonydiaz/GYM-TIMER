@@ -29,8 +29,11 @@ const useStyles = makeStyles(theme => {
       margin: theme.spacing(0, 2),
     },
     rounds: {
-      fontSize: '2rem',
+      fontSize: '5rem',
       margin: theme.spacing(0, 0, 6, 0),
+      [theme.breakpoints.down('md')]: {
+        fontSize: '2rem',
+      }
     },
   });
 });
@@ -112,13 +115,6 @@ function EveryMinuteOnTheMinute() {
     </Grid>
   </Grid>
   );
-  
-  const matches = useMediaQuery('(max-width:600px)');
-  if (matches === true) {
-    roundsStyled = (
-      <div className={classes.rounds}>Rnds: {rounds}</div>
-    );
-  }
 
   const tMinus = <CountDown countDown={countDown} setCountDown={setCountDown} />;
   const formattedMinutesString = `${minutes.toString().padStart(2, '0')}`;
